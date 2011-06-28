@@ -31,7 +31,7 @@
 /**
  * Palettes
  */
-$GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace('{layout_legend:hide}', '{registration_legend:hide},auto_activate_registration,auto_login_registration,auto_login_activation;{layout_legend:hide}', $GLOBALS['TL_DCA']['tl_page']['palettes']['root']);
+$GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace('{layout_legend:hide}', '{registration_legend:hide},auto_activate_registration,auto_activate_where,auto_login_registration,auto_login_activation;{layout_legend:hide}', $GLOBALS['TL_DCA']['tl_page']['palettes']['root']);
 
 
 /**
@@ -42,7 +42,15 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_registration'] = array
 	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['auto_activate_registration'],
 	'exclude'		=> true,
 	'inputType'		=> 'checkbox',
-	'eval'			=> array('tl_class'=>'w50'),
+	'eval'			=> array('tl_class'=>'w50 m12'),
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_where'] = array
+(
+	'label'			=> &$GLOBALS['TL_LANG']['tl_page']['auto_activate_where'],
+	'exclude'		=> true,
+	'inputType'		=> 'text',
+	'eval'			=> array('decodeEntities'=>true, 'tl_class'=>'w50'),
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['auto_login_registration'] = array

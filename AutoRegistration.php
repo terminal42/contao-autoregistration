@@ -42,11 +42,12 @@ class AutoRegistration extends Frontend
 			
 		if ($objRootPage->auto_activate_registration)
 		{
-			$this->Database->prepare("UPDATE tl_member SET disable='' WHERE id=?")->execute($intUser);
+			$intMatch = $this->Database->prepare("UPDATE tl_member SET disable='' WHERE id=?" . ($objRootPage->auto_activate_where ? " AND {$objRootPage->auto_activate_where}" : ''))->execute($intUser)->affectedRows;
 			
-			if ($objRootPage->auto_login_registration)
+			if ($objRootPage->auto_login_registration && $intMatch)
 			{
 				$this->import('FrontendUser', 'User');
+				
 				$this->User->login();
 			}
 		}
