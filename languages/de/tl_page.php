@@ -21,8 +21,9 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2009-2011
+ * @copyright  Andreas Schempp 2009-2012
  * @author     Andreas Schempp <andreas@schempp.ch>
+ * @author     Jan Reuteler <janreuteler@ymail.com>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  * @version    $Id$
  */
@@ -34,6 +35,7 @@
 $GLOBALS['TL_LANG']['tl_page']['auto_activate_registration']	= array('Automatisch aktivieren', 'Neue Mitglieder automatisch aktivieren (ohne E-Mail-Bestätigung).');
 $GLOBALS['TL_LANG']['tl_page']['auto_login_registration']		= array('Automatisch anmelden', 'Neue Mitglieder automatisch anmelden (funktioniert nur wenn Aktivierung auch eingeschaltet ist).');
 $GLOBALS['TL_LANG']['tl_page']['auto_login_activation']			= array('Nach Aktivierung automatisch anmelden', 'Neue Mitglieder automatisch anmelden wenn das Konto aktiviert wurde.');
+$GLOBALS['TL_LANG']['tl_page']['auto_activate_where']			= array('SQL-Bedingung', 'Nur Mitglieder aktivieren auf welche diese SQL-WHERE-Bedingung zutrifft.');
 
 
 /**
