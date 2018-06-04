@@ -7,7 +7,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Config\ConfigInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use Terminal42\AutoRegistrationBundle\Terminal42AutoRegistrationBundle;
+use Terminal42\ContaoAutoRegistrationBundle\Terminal42ContaoAutoRegistrationBundle;
 
 /**
  * Contao Manager plugin.
@@ -25,7 +25,7 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(Terminal42AutoRegistrationBundle::class)
+            BundleConfig::create(Terminal42ContaoAutoRegistrationBundle::class)
                 ->setLoadAfter(
                     [
                         ContaoCoreBundle::class

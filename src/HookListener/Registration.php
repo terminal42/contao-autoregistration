@@ -6,7 +6,7 @@
  * Time: 11:47
  */
 
-namespace Terminal42\AutoRegistrationBundle\HookListener;
+namespace Terminal42\ContaoAutoRegistrationBundle\HookListener;
 
 
 use Doctrine\DBAL\Connection;

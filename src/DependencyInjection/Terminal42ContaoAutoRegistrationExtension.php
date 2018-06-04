@@ -6,7 +6,7 @@
  * Time: 11:43
  */
 
-namespace Terminal42\AutoRegistrationBundle\DependencyInjection;
+namespace Terminal42\ContaoAutoRegistrationBundle\DependencyInjection;
 
 
 use Symfony\Component\Config\FileLocator;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class Terminal42AutoRegistrationExtension extends Extension
+class Terminal42ContaoAutoRegistrationExtension extends Extension
 {
 
     /**

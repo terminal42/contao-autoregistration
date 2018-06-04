@@ -1,6 +1,6 @@
 services:
     terminal42.autoregistration.hook_listener.registration:
-        class: Terminal42\AutoRegistrationBundle\HookListener\Registration
+        class: Terminal42\ContaoAutoRegistrationBundle\HookListener\Registration
         arguments:
             - '@contao.security.frontend_user_provider'
             - '@security.token_storage'
