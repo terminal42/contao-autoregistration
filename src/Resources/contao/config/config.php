@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
@@ -29,7 +29,7 @@
 
 
 /**
- * Extension folder
+ * Hooks
  */
-$GLOBALS['TL_LANG']['MOD']['autoregistration'] = array('Nach Registrierung automatisch aktivieren/anmelden');
-
+$GLOBALS['TL_HOOKS']['createNewUser'][] = array('AutoRegistration', 'processRegistration');
+$GLOBALS['TL_HOOKS']['activateAccount'][] = array('AutoRegistration', 'activateAccount');

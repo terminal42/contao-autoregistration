@@ -1,0 +1,17 @@
+{
+  "name": "terminal42/contao-autoregistration",
+  "type": "contao-bundle",
+  "license": "LGPL-3.0-or-later",
+  "require": {
+    "php": "^7.1",
+    "contao/core-bundle": "^4.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Terminal42\\ContaoAutoRegistrationBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "Terminal42\\ContaoAutoRegistrationBundle\\ContaoManager\\Plugin"
+  }
+}

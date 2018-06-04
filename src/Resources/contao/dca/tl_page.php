@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
@@ -43,6 +43,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_registration'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'checkbox',
 	'eval'			=> array('tl_class'=>'w50 m12'),
+    'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_where'] = array
@@ -51,6 +52,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_where'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'text',
 	'eval'			=> array('decodeEntities'=>true, 'tl_class'=>'w50'),
+    'sql' => "varchar(255) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['auto_login_registration'] = array
@@ -59,6 +61,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_login_registration'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'checkbox',
 	'eval'			=> array('tl_class'=>'w50'),
+    'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['auto_login_activation'] = array
@@ -67,5 +70,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_login_activation'] = array
 	'exclude'		=> true,
 	'inputType'		=> 'checkbox',
 	'eval'			=> array('tl_class'=>'w50'),
+    'sql' => "char(1) NOT NULL default ''"
 );
 

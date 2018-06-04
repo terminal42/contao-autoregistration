@@ -1,0 +1,12 @@
+services:
+    terminal42.autoregistration.hook_listener.registration:
+        class: Terminal42\AutoRegistrationBundle\HookListener\Registration
+        arguments:
+            - '@contao.security.frontend_user_provider'
+            - '@security.token_storage'
+            - '@session'
+            - '@database_connection'
+            - '@monolog.logger.contao'
+        tags:
+            - { name: 'contao.hook', hook: 'createNewUser', method: 'processRegistration' }
+            - { name: 'contao.hook', hook: 'activateAccount', method: 'activateAccount' }
