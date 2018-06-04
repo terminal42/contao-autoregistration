@@ -9,6 +9,7 @@
 namespace Terminal42\ContaoAutoRegistrationBundle\HookListener;
 
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -67,7 +68,7 @@ class Registration
         $this->logger       = $logger;
     }
 
-    public function processRegistration($userId, $arrData)
+    public function processRegistration($userId, $data)
     {
         global $objPage;
 
@@ -79,7 +80,6 @@ class Registration
             ->execute();
 
         $result = $statement->fetch(\PDO::FETCH_OBJ);
-
         if (false === $result) {
             return;
         }
@@ -89,14 +89,13 @@ class Registration
                 ->update('tl_member')
                 ->set('disable', '')
                 ->where('id=:id')
-                ->execute($userId);
+                ->setParameter('id', $userId)
+                ->execute();
 
             // TODO support where
 
             if ($result->auto_login_registration && $match) {
-                $this->import('FrontendUser', 'User');
-                // TODO rework this one
-                $this->User->login();
+                $this->loginUser($data['username']);
             }
         }
     }
@@ -114,24 +113,28 @@ class Registration
                 ->execute();
 
         $result = $statement->fetch(\PDO::FETCH_OBJ);
-
         if (false === $result) {
             return;
         }
 
         if ($result->auto_login_activation) {
-            // Authenticate user
-            $user = $this->userProvider->loadUserByUsername($member->username);
-
-            $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->tokenStorage->setToken($usernamePasswordToken);
-            $this->session->set('_security_main', serialize($usernamePasswordToken));
-
-            $this->logger->log(
-                LogLevel::INFO,
-                'User "' . $member->username . '" was logged in automatically',
-                array('contao' => new ContaoContext(__METHOD__, TL_ACCESS))
-            );
+            $this->loginUser($member->username);
         }
+    }
+
+    private function loginUser(string $username)
+    {
+        // Authenticate user
+        $user = $this->userProvider->loadUserByUsername($username);
+
+        $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->tokenStorage->setToken($usernamePasswordToken);
+        $this->session->set('_security_main', serialize($usernamePasswordToken));
+
+        $this->logger->log(
+            LogLevel::INFO,
+            'User "' . $username . '" was logged in automatically',
+            array('contao' => new ContaoContext(__METHOD__, TL_ACCESS))
+        );
     }
 }

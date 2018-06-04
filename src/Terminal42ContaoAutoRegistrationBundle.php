@@ -8,7 +8,9 @@
 
 namespace Terminal42\ContaoAutoRegistrationBundle;
 
-class Terminal42ContaoAutoRegistrationBundle
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class Terminal42ContaoAutoRegistrationBundle extends Bundle
 {
 
 }
