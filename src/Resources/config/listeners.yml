@@ -7,6 +7,8 @@ services:
             - '@session'
             - '@database_connection'
             - '@monolog.logger.contao'
+            - '@event_dispatcher'
+            - '@request_stack'
         tags:
             - { name: 'contao.hook', hook: 'createNewUser' }
             - { name: 'contao.hook', hook: 'activateAccount' }

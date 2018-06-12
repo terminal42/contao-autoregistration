@@ -7,10 +7,13 @@ use Contao\MemberModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 
 class Registration
@@ -41,26 +44,34 @@ class Registration
     private $logger;
 
     /**
-     * CreateNewUserListener constructor.
-     *
-     * @param UserProviderInterface $userProvider The user provider.
-     * @param TokenStorageInterface $tokenStorage The token storage.
-     * @param Session               $session      The session.
-     * @param Connection            $connection   The database connection.
-     * @param LoggerInterface       $logger
+     * @var EventDispatcherInterface
      */
-    public function __construct(
-        UserProviderInterface $userProvider,
-        TokenStorageInterface $tokenStorage,
-        Session $session,
-        Connection $connection,
-        LoggerInterface $logger
-    ) {
-        $this->userProvider = $userProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->session      = $session;
-        $this->connection   = $connection;
-        $this->logger       = $logger;
+    private $eventDispatcher;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * Registration constructor.
+     *
+     * @param UserProviderInterface    $userProvider    The user provider.
+     * @param TokenStorageInterface    $tokenStorage    The token storage.
+     * @param Session                  $session         The session.
+     * @param Connection               $connection      The database connection.
+     * @param LoggerInterface          $logger          The logger.
+     * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
+     * @param RequestStack             $requestStack    The request stack.
+     */
+    public function __construct(UserProviderInterface $userProvider, TokenStorageInterface $tokenStorage, Session $session, Connection $connection, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack) {
+        $this->userProvider    = $userProvider;
+        $this->tokenStorage    = $tokenStorage;
+        $this->session         = $session;
+        $this->connection      = $connection;
+        $this->logger          = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->requestStack    = $requestStack;
     }
 
     /**
@@ -110,13 +121,12 @@ class Registration
     {
         global $objPage;
 
-        $statement =
-            $this->connection->createQueryBuilder()
-                ->select('*')
-                ->from('tl_page')
-                ->where('id=:id')
-                ->setParameter('id', $objPage->rootId)
-                ->execute();
+        $statement = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('tl_page')
+            ->where('id=:id')
+            ->setParameter('id', $objPage->rootId)
+            ->execute();
 
         $result = $statement->fetch(\PDO::FETCH_OBJ);
         if (false === $result) {
@@ -141,6 +151,9 @@ class Registration
         $usernamePasswordToken = new UsernamePasswordToken($user, null, 'frontend', $user->getRoles());
         $this->tokenStorage->setToken($usernamePasswordToken);
         $this->session->set('_security_frontend', serialize($usernamePasswordToken));
+
+        $event = new InteractiveLoginEvent($this->requestStack->getCurrentRequest(), $usernamePasswordToken);
+        $this->eventDispatcher->dispatch('security.interactive_login', $event);
 
         $this->logger->log(
             LogLevel::INFO,
