@@ -4,7 +4,6 @@ services:
         arguments:
             - '@contao.security.frontend_user_provider'
             - '@security.token_storage'
-            - '@session'
             - '@database_connection'
             - '@monolog.logger.contao'
             - '@event_dispatcher'
