@@ -1,17 +1,28 @@
 {
   "name": "terminal42/contao-autoregistration",
+  "description": "Auto-login your users after their registration/account activation.",
   "type": "contao-bundle",
   "license": "LGPL-3.0-or-later",
   "require": {
     "php": "^7.1",
-    "contao/core-bundle": "^4.5"
+    "contao/core-bundle": "^4.5",
+    "doctrine/dbal": "^2.7",
+    "psr/log": "^1.0",
+    "symfony/config": "^3.3 || ^4.0",
+    "symfony/dependency-injection": "^3.3 || ^4.0",
+    "symfony/http-foundation": "^3.3 || ^4.0",
+    "symfony/http-kernel": "^3.3 || 4.0",
+    "symfony/security-core": "^3.3 || ^4.0"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "~2.2"
   },
   "autoload": {
     "psr-4": {
-      "Terminal42\\ContaoAutoRegistrationBundle\\": "src/"
+      "Terminal42\\AutoRegistrationBundle\\": "src/"
     }
   },
   "extra": {
-    "contao-manager-plugin": "Terminal42\\ContaoAutoRegistrationBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "Terminal42\\AutoRegistrationBundle\\ContaoManager\\Plugin"
   }
 }

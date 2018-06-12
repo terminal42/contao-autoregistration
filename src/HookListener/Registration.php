@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: richard
- * Date: 04.06.18
- * Time: 11:47
- */
 
-namespace Terminal42\ContaoAutoRegistrationBundle\HookListener;
-
+namespace Terminal42\AutoRegistrationBundle\HookListener;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\MemberModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -17,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+
 
 class Registration
 {
@@ -68,7 +63,13 @@ class Registration
         $this->logger       = $logger;
     }
 
-    public function processRegistration($userId, $data)
+    /**
+     * Within the registration process, log in the user if needed.
+     *
+     * @param int   $userId The user id
+     * @param array $data   The user data of the registration module
+     */
+    public function onCreateNewUser(int $userId, array $data): void
     {
         global $objPage;
 
@@ -100,7 +101,12 @@ class Registration
         }
     }
 
-    public function activateAccount($member)
+    /**
+     * Within the activation process, log in the user if needed.
+     *
+     * @param MemberModel $member
+     */
+    public function onActivateAccount(MemberModel $member): void
     {
         global $objPage;
 
@@ -122,14 +128,19 @@ class Registration
         }
     }
 
-    private function loginUser(string $username)
+    /**
+     * Actually log in the user by given username.
+     *
+     * @param string $username
+     */
+    private function loginUser(string $username): void
     {
         // Authenticate user
         $user = $this->userProvider->loadUserByUsername($username);
 
-        $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $usernamePasswordToken = new UsernamePasswordToken($user, null, 'frontend', $user->getRoles());
         $this->tokenStorage->setToken($usernamePasswordToken);
-        $this->session->set('_security_main', serialize($usernamePasswordToken));
+        $this->session->set('_security_frontend', serialize($usernamePasswordToken));
 
         $this->logger->log(
             LogLevel::INFO,
