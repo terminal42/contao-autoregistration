@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 
-class Terminal42ContaoAutoRegistrationExtension extends Extension
+class Terminal42AutoRegistrationExtension extends Extension
 {
 
     /**
