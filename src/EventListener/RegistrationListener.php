@@ -1,8 +1,9 @@
 <?php
 
-namespace Terminal42\AutoRegistrationBundle\HookListener;
+namespace Terminal42\AutoRegistrationBundle\EventListener;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\FrontendUser;
 use Contao\MemberModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -11,11 +12,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 
-class Registration
+class RegistrationListener
 {
     /**
      * @var UserProviderInterface
@@ -48,7 +50,7 @@ class Registration
     private $requestStack;
 
     /**
-     * Registration constructor.
+     * RegistrationListener constructor.
      *
      * @param UserProviderInterface    $userProvider    The user provider.
      * @param TokenStorageInterface    $tokenStorage    The token storage.
@@ -137,8 +139,15 @@ class Registration
      */
     private function loginUser(string $username): void
     {
-        // Authenticate user
-        $user = $this->userProvider->loadUserByUsername($username);
+        try {
+            $user = $this->userProvider->loadUserByUsername($username);
+        } catch (UsernameNotFoundException $exception) {
+            return;
+        }
+
+        if (!($user instanceof FrontendUser)) {
+            return;
+        }
 
         $usernamePasswordToken = new UsernamePasswordToken($user, null, 'frontend', $user->getRoles());
         $this->tokenStorage->setToken($usernamePasswordToken);
