@@ -5,6 +5,7 @@ namespace Terminal42\AutoRegistrationBundle\EventListener;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\MemberModel;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -59,7 +60,14 @@ class RegistrationListener
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
      * @param RequestStack             $requestStack    The request stack.
      */
-    public function __construct(UserProviderInterface $userProvider, TokenStorageInterface $tokenStorage, Connection $connection, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack) {
+    public function __construct(
+        UserProviderInterface $userProvider,
+        TokenStorageInterface $tokenStorage,
+        Connection $connection,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack
+    ) {
         $this->userProvider    = $userProvider;
         $this->tokenStorage    = $tokenStorage;
         $this->connection      = $connection;
@@ -78,19 +86,12 @@ class RegistrationListener
     {
         global $objPage;
 
-        $statement = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('tl_page')
-            ->where('id=:id')
-            ->setParameter('id', $objPage->rootId)
-            ->execute();
-
-        $result = $statement->fetch(\PDO::FETCH_OBJ);
-        if (false === $result) {
+        $pageModel = PageModel::findById($objPage->rootId);
+        if (null === $pageModel) {
             return;
         }
 
-        if ($result->auto_activate_registration) {
+        if ($pageModel->auto_activate_registration) {
             $match = $this->connection->createQueryBuilder()
                 ->update('tl_member')
                 ->set('disable', '')
@@ -98,9 +99,9 @@ class RegistrationListener
                 ->setParameter('id', $userId)
                 ->execute();
 
-            // TODO support where
+            // TODO implement `auto_activate_where`
 
-            if ($result->auto_login_registration && $match) {
+            if ($pageModel->auto_login_registration && $match) {
                 $this->loginUser($data['username']);
             }
         }
@@ -115,19 +116,12 @@ class RegistrationListener
     {
         global $objPage;
 
-        $statement = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('tl_page')
-            ->where('id=:id')
-            ->setParameter('id', $objPage->rootId)
-            ->execute();
-
-        $result = $statement->fetch(\PDO::FETCH_OBJ);
-        if (false === $result) {
+        $pageModel = PageModel::findById($objPage->rootId);
+        if (null === $pageModel) {
             return;
         }
 
-        if ($result->auto_login_activation) {
+        if ($pageModel->auto_login_activation) {
             $this->loginUser($member->username);
         }
     }
