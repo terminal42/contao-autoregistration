@@ -1,6 +1,6 @@
 {
     "name": "terminal42/contao-autoregistration",
-    "description": "Auto-login your users after their registration/account activation.",
+    "description": "Auto-login your users after their registration or account activation.",
     "type": "contao-bundle",
     "license": "LGPL-3.0-or-later",
     "require": {
@@ -17,7 +17,12 @@
         "symfony/security-http": "^3.3 || ^4.0"
     },
     "require-dev": {
-        "contao/manager-plugin": "~2.2"
+        "contao/manager-plugin": "~2.0",
+        "friendsofphp/php-cs-fixer": "^2.12",
+        "php-http/guzzle6-adapter": "^1.1"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {

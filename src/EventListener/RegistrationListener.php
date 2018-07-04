@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * autoregistration extension for Contao Open Source CMS
+ *
+ * @copyright  Copyright (c) 2018, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    LGPL-3.0+
+ * @link       http://github.com/terminal42/contao-folderpage
+ */
+
 namespace Terminal42\AutoRegistrationBundle\EventListener;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
@@ -16,7 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-
 
 class RegistrationListener
 {
@@ -53,12 +61,12 @@ class RegistrationListener
     /**
      * RegistrationListener constructor.
      *
-     * @param UserProviderInterface    $userProvider    The user provider.
-     * @param TokenStorageInterface    $tokenStorage    The token storage.
-     * @param Connection               $connection      The database connection.
-     * @param LoggerInterface          $logger          The logger.
-     * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
-     * @param RequestStack             $requestStack    The request stack.
+     * @param UserProviderInterface    $userProvider
+     * @param TokenStorageInterface    $tokenStorage
+     * @param Connection               $connection
+     * @param LoggerInterface          $logger
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param RequestStack             $requestStack
      */
     public function __construct(
         UserProviderInterface $userProvider,
@@ -68,12 +76,12 @@ class RegistrationListener
         EventDispatcherInterface $eventDispatcher,
         RequestStack $requestStack
     ) {
-        $this->userProvider    = $userProvider;
-        $this->tokenStorage    = $tokenStorage;
-        $this->connection      = $connection;
-        $this->logger          = $logger;
+        $this->userProvider = $userProvider;
+        $this->tokenStorage = $tokenStorage;
+        $this->connection = $connection;
+        $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
-        $this->requestStack    = $requestStack;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -87,6 +95,7 @@ class RegistrationListener
         global $objPage;
 
         $pageModel = PageModel::findById($objPage->rootId);
+
         if (null === $pageModel) {
             return;
         }
@@ -97,9 +106,8 @@ class RegistrationListener
                 ->set('disable', '')
                 ->where('id=:id')
                 ->setParameter('id', $userId)
-                ->execute();
-
-            // TODO implement `auto_activate_where`
+                ->execute()
+            ;
 
             if ($pageModel->auto_login_registration && $match) {
                 $this->loginUser($data['username']);
@@ -117,6 +125,7 @@ class RegistrationListener
         global $objPage;
 
         $pageModel = PageModel::findById($objPage->rootId);
+
         if (null === $pageModel) {
             return;
         }
@@ -139,7 +148,7 @@ class RegistrationListener
             return;
         }
 
-        if (!($user instanceof FrontendUser)) {
+        if (!$user instanceof FrontendUser) {
             return;
         }
 
@@ -151,8 +160,8 @@ class RegistrationListener
 
         $this->logger->log(
             LogLevel::INFO,
-            'User "' . $username . '" was logged in automatically',
-            array('contao' => new ContaoContext(__METHOD__, TL_ACCESS))
+            'User "'.$username.'" was logged in automatically',
+            ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)]
         );
     }
 }
