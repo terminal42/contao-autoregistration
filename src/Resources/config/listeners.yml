@@ -8,6 +8,8 @@ services:
             - '@logger'
             - '@event_dispatcher'
             - '@request_stack'
+            - '@contao.security.user_checker'
+            - '@contao.security.authentication_success_handler'
         tags:
             - { name: 'contao.hook', hook: 'createNewUser' }
             - { name: 'contao.hook', hook: 'activateAccount' }

@@ -22,9 +22,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\SecurityEvents;
 
 class RegistrationListener
 {
@@ -59,29 +63,37 @@ class RegistrationListener
     private $requestStack;
 
     /**
+     * @var UserCheckerInterface
+     */
+    private $userChecker;
+
+    /**
+     * @var AuthenticationSuccessHandlerInterface
+     */
+    private $authenticationSuccessHandler;
+
+    /**
      * RegistrationListener constructor.
      *
-     * @param UserProviderInterface    $userProvider
-     * @param TokenStorageInterface    $tokenStorage
-     * @param Connection               $connection
-     * @param LoggerInterface          $logger
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param RequestStack             $requestStack
+     * @param UserProviderInterface                 $userProvider
+     * @param TokenStorageInterface                 $tokenStorage
+     * @param Connection                            $connection
+     * @param LoggerInterface                       $logger
+     * @param EventDispatcherInterface              $eventDispatcher
+     * @param RequestStack                          $requestStack
+     * @param UserCheckerInterface                  $userChecker
+     * @param AuthenticationSuccessHandlerInterface $authenticationSuccessHandler
      */
-    public function __construct(
-        UserProviderInterface $userProvider,
-        TokenStorageInterface $tokenStorage,
-        Connection $connection,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        RequestStack $requestStack
-    ) {
+    public function __construct(UserProviderInterface $userProvider, TokenStorageInterface $tokenStorage, Connection $connection, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack, UserCheckerInterface $userChecker, AuthenticationSuccessHandlerInterface $authenticationSuccessHandler)
+    {
         $this->userProvider = $userProvider;
         $this->tokenStorage = $tokenStorage;
         $this->connection = $connection;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->requestStack = $requestStack;
+        $this->userChecker = $userChecker;
+        $this->authenticationSuccessHandler = $authenticationSuccessHandler;
     }
 
     /**
@@ -152,16 +164,28 @@ class RegistrationListener
             return;
         }
 
+        try {
+            $this->userChecker->checkPreAuth($user);
+            $this->userChecker->checkPostAuth($user);
+        } catch (AccountStatusException $e) {
+            return;
+        }
+
         $usernamePasswordToken = new UsernamePasswordToken($user, null, 'frontend', $user->getRoles());
         $this->tokenStorage->setToken($usernamePasswordToken);
 
         $event = new InteractiveLoginEvent($this->requestStack->getCurrentRequest(), $usernamePasswordToken);
-        $this->eventDispatcher->dispatch('security.interactive_login', $event);
+        $this->eventDispatcher->dispatch(SecurityEvents::INTERACTIVE_LOGIN, $event);
 
         $this->logger->log(
             LogLevel::INFO,
             'User "'.$username.'" was logged in automatically',
             ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)]
+        );
+
+        $this->authenticationSuccessHandler->onAuthenticationSuccess(
+            $this->requestStack->getCurrentRequest(),
+            $usernamePasswordToken
         );
     }
 }
