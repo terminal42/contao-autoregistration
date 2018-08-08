@@ -115,9 +115,10 @@ class RegistrationListener
         if ($pageModel->auto_activate_registration) {
             $match = $this->connection->createQueryBuilder()
                 ->update('tl_member')
-                ->set('disable', '')
+                ->set('disable', ':disable')
                 ->where('id=:id')
                 ->setParameter('id', $userId)
+                ->setParameter(':disable', '')
                 ->execute()
             ;
 
