@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['auto_activate_registration'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_page']['auto_activate_registration'],
     'exclude'   => true,
     'inputType' => 'checkbox',
-    'eval'      => ['tl_class' => 'w50 m12'],
+    'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 m12'],
     'sql'       => ['type' => 'string', 'length' => 1, 'notnull' => true, 'fixed' => true, 'default' => '']
 ];
 
