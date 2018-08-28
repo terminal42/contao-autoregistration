@@ -12,7 +12,7 @@
         "symfony/dependency-injection": "^3.3 || ^4.0",
         "symfony/event-dispatcher": "^3.3 || ^4.0",
         "symfony/http-foundation": "^3.3 || ^4.0",
-        "symfony/http-kernel": "^3.3 || 4.0",
+        "symfony/http-kernel": "^3.3 || ^4.0",
         "symfony/security-core": "^3.3 || ^4.0",
         "symfony/security-http": "^3.3 || ^4.0"
     },
