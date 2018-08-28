@@ -3,6 +3,21 @@
     "description": "Auto-login your users after their registration or account activation.",
     "type": "contao-bundle",
     "license": "MIT",
+    "authors":[
+        {
+            "name":"terminal42 gmbh",
+            "homepage":"http://terminal42.ch"
+        },
+        {
+            "name":"Richard Henkenjohann",
+            "homepage":"https://github.com/richardhj"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/terminal42/contao-autoregistration/issues",
+        "source": "https://github.com/terminal42/contao-autoregistration",
+        "forum": "https://community.contao.org"
+    },
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "^4.5",
