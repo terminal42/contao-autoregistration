@@ -10,6 +10,7 @@ $GLOBALS['TL_DCA']['tl_page']['subpalettes']['auto_activate_registration'] = 'au
     ->addLegend('registration_legend', 'layout_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE, true)
     ->addField(['auto_activate_registration', 'auto_login_activation'], 'registration_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('root', 'tl_page')
+    ->applyToPalette('rootfallback', 'tl_page')
 ;
 
 
