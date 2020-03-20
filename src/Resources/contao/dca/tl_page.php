@@ -1,17 +1,28 @@
 <?php
 
-/**
- * Palettes
+/*
+ * autoregistration extension for Contao Open Source CMS
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    MIT
+ * @link       http://github.com/terminal42/contao-autoregistration
  */
+
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
+
 $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'auto_activate_registration';
 $GLOBALS['TL_DCA']['tl_page']['subpalettes']['auto_activate_registration'] = 'auto_login_registration';
 
-\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-    ->addLegend('registration_legend', 'layout_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE, true)
-    ->addField(['auto_activate_registration', 'auto_login_activation'], 'registration_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('root', 'tl_page')
-    ->applyToPalette('rootfallback', 'tl_page')
-;
+try {
+    $paletteManipulator = PaletteManipulator::create()
+        ->addLegend('registration_legend', 'layout_legend', PaletteManipulator::POSITION_BEFORE, true)
+        ->addField(['auto_activate_registration', 'auto_login_activation'], 'registration_legend', PaletteManipulator::POSITION_APPEND)
+        ->applyToPalette('root', 'tl_page')
+        ->applyToPalette('rootfallback', 'tl_page')
+    ;
+} catch (PaletteNotFoundException $e) {}
 
 
 /**
