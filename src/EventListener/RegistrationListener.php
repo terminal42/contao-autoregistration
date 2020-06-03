@@ -3,7 +3,7 @@
 /*
  * autoregistration extension for Contao Open Source CMS
  *
- * @copyright  Copyright (c) 2018, terminal42 gmbh
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
  * @author     terminal42 gmbh <info@terminal42.ch>
  * @license    MIT
  * @link       http://github.com/terminal42/contao-autoregistration
@@ -14,6 +14,7 @@ namespace Terminal42\AutoRegistrationBundle\EventListener;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\MemberModel;
+use Contao\Module;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -74,15 +75,6 @@ class RegistrationListener
 
     /**
      * RegistrationListener constructor.
-     *
-     * @param UserProviderInterface                 $userProvider
-     * @param TokenStorageInterface                 $tokenStorage
-     * @param Connection                            $connection
-     * @param LoggerInterface                       $logger
-     * @param EventDispatcherInterface              $eventDispatcher
-     * @param RequestStack                          $requestStack
-     * @param UserCheckerInterface                  $userChecker
-     * @param AuthenticationSuccessHandlerInterface $authenticationSuccessHandler
      */
     public function __construct(UserProviderInterface $userProvider, TokenStorageInterface $tokenStorage, Connection $connection, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack, UserCheckerInterface $userChecker, AuthenticationSuccessHandlerInterface $authenticationSuccessHandler)
     {
@@ -130,8 +122,6 @@ class RegistrationListener
 
     /**
      * Within the activation process, log in the user if needed.
-     *
-     * @param MemberModel $member
      */
     public function onActivateAccount(MemberModel $member): void
     {
@@ -150,8 +140,6 @@ class RegistrationListener
 
     /**
      * Actually log in the user by given username.
-     *
-     * @param string $username
      */
     private function loginUser(string $username): void
     {
@@ -184,9 +172,13 @@ class RegistrationListener
             ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)]
         );
 
-        $this->authenticationSuccessHandler->onAuthenticationSuccess(
-            $this->requestStack->getCurrentRequest(),
-            $usernamePasswordToken
-        );
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return;
+        }
+
+        $request->request->set('_target_path', base64_encode($request->getRequestUri()));
+
+        $this->authenticationSuccessHandler->onAuthenticationSuccess($request, $usernamePasswordToken);
     }
 }
