@@ -19,7 +19,7 @@
         "forum": "https://community.contao.org"
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.0",
         "contao/core-bundle": "^4.5",
         "doctrine/dbal": "^2.7",
         "psr/log": "^1.0",
