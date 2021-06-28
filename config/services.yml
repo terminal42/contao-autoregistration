@@ -1,6 +1,10 @@
 services:
-    terminal42.autoregistration.listener.registration:
-        class: Terminal42\AutoRegistrationBundle\EventListener\RegistrationListener
+    _defaults:
+        autoconfigure: true
+        autowire: false
+        public: false
+
+    Terminal42\AutoRegistrationBundle\EventListener\RegistrationListener:
         arguments:
             - '@contao.security.frontend_user_provider'
             - '@security.token_storage'
@@ -11,6 +15,4 @@ services:
             - '@contao.security.user_checker'
             - '@contao.security.authentication_success_handler'
         tags:
-            - { name: 'contao.hook', hook: 'createNewUser' }
-            - { name: 'contao.hook', hook: 'activateAccount' }
             - { name: 'monolog.logger', channel: 'terminal42_autoregistration' }

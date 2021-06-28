@@ -1,7 +1,8 @@
 {
     "name": "terminal42/contao-autoregistration",
-    "description": "Auto-login your users after their registration or account activation.",
     "type": "contao-bundle",
+    "description": "Auto-login your users after their registration or account activation.",
+    "keywords": ["login", "security", "registration", "contao"],
     "license": "MIT",
     "authors":[
         {
@@ -13,28 +14,28 @@
             "homepage":"https://github.com/richardhj"
         }
     ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/terminal42"
+        },
+        {
+            "type": "other",
+            "url": "https://ko-fi.com/terminal42"
+        }
+    ],
     "support": {
         "issues": "https://github.com/terminal42/contao-autoregistration/issues",
         "source": "https://github.com/terminal42/contao-autoregistration",
         "forum": "https://community.contao.org"
     },
     "require": {
-        "php": "^7.1 || ^8.0",
-        "contao/core-bundle": "^4.5",
-        "doctrine/dbal": "^2.7",
-        "psr/log": "^1.0",
-        "symfony/config": "^3.3 || ^4.0",
-        "symfony/dependency-injection": "^3.3 || ^4.0",
-        "symfony/event-dispatcher": "^3.3 || ^4.0",
-        "symfony/http-foundation": "^3.3 || ^4.0",
-        "symfony/http-kernel": "^3.3 || ^4.0",
-        "symfony/security-core": "^3.3 || ^4.0",
-        "symfony/security-http": "^3.3 || ^4.0"
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "^4.9"
     },
     "require-dev": {
-        "contao/manager-plugin": "~2.0",
-        "friendsofphp/php-cs-fixer": "^2.12",
-        "php-http/guzzle6-adapter": "^1.1"
+        "contao/manager-plugin": "^2.0",
+        "contao/easy-coding-standard": "^3.0"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
@@ -46,5 +47,10 @@
     },
     "extra": {
         "contao-manager-plugin": "Terminal42\\AutoRegistrationBundle\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "cs-fixer": [
+            "vendor/bin/ecs check src/ --fix --ansi"
+        ]
     }
 }

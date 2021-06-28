@@ -1,14 +1,5 @@
 <?php
 
-/*
- * autoregistration extension for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 gmbh <info@terminal42.ch>
- * @license    MIT
- * @link       http://github.com/terminal42/contao-autoregistration
- */
-
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 

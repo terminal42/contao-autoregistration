@@ -1,20 +1,13 @@
 <?php
 
-/*
- * autoregistration extension for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 gmbh <info@terminal42.ch>
- * @license    MIT
- * @link       http://github.com/terminal42/contao-autoregistration
- */
+declare(strict_types=1);
 
 namespace Terminal42\AutoRegistrationBundle\EventListener;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendUser;
 use Contao\MemberModel;
-use Contao\Module;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -33,45 +26,14 @@ use Symfony\Component\Security\Http\SecurityEvents;
 
 class RegistrationListener
 {
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var UserCheckerInterface
-     */
-    private $userChecker;
-
-    /**
-     * @var AuthenticationSuccessHandlerInterface
-     */
-    private $authenticationSuccessHandler;
+    private UserProviderInterface $userProvider;
+    private TokenStorageInterface $tokenStorage;
+    private Connection $connection;
+    private LoggerInterface $logger;
+    private EventDispatcherInterface $eventDispatcher;
+    private RequestStack $requestStack;
+    private UserCheckerInterface $userChecker;
+    private AuthenticationSuccessHandlerInterface $authenticationSuccessHandler;
 
     /**
      * RegistrationListener constructor.
@@ -91,8 +53,7 @@ class RegistrationListener
     /**
      * Within the registration process, log in the user if needed.
      *
-     * @param int   $userId The user id
-     * @param array $data   The user data of the registration module
+     * @Hook("createNewUser")
      */
     public function onCreateNewUser(int $userId, array $data): void
     {
@@ -122,6 +83,8 @@ class RegistrationListener
 
     /**
      * Within the activation process, log in the user if needed.
+     *
+     * @Hook("activateAccount")
      */
     public function onActivateAccount(MemberModel $member): void
     {
@@ -164,7 +127,7 @@ class RegistrationListener
         $this->tokenStorage->setToken($usernamePasswordToken);
 
         $event = new InteractiveLoginEvent($this->requestStack->getCurrentRequest(), $usernamePasswordToken);
-        $this->eventDispatcher->dispatch(SecurityEvents::INTERACTIVE_LOGIN, $event);
+        $this->eventDispatcher->dispatch($event, SecurityEvents::INTERACTIVE_LOGIN);
 
         $this->logger->log(
             LogLevel::INFO,
