@@ -8,7 +8,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendUser;
 use Contao\MemberModel;
-use Contao\PageModel;
+use Contao\ModuleRegistration;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -55,29 +55,24 @@ class RegistrationListener
      *
      * @Hook("createNewUser")
      */
-    public function onCreateNewUser(int $userId, array $data): void
+    public function onCreateNewUser(int $userId, array &$data, ModuleRegistration $module): void
     {
-        global $objPage;
-
-        $pageModel = PageModel::findById($objPage->rootId);
-
-        if (null === $pageModel) {
+        if (!$module->reg_autoActivate) {
             return;
         }
 
-        if ($pageModel->auto_activate_registration) {
-            $match = $this->connection->createQueryBuilder()
-                ->update('tl_member')
-                ->set('disable', ':disable')
-                ->where('id=:id')
-                ->setParameter('id', $userId)
-                ->setParameter(':disable', '')
-                ->execute()
-            ;
+        $data['disable'] = '';
+        $match = $this->connection->createQueryBuilder()
+            ->update('tl_member')
+            ->set('disable', ':disable')
+            ->where('id=:id')
+            ->setParameter('id', $userId)
+            ->setParameter(':disable', '')
+            ->execute()
+        ;
 
-            if ($pageModel->auto_login_registration && $match) {
-                $this->loginUser($data['username']);
-            }
+        if ('login' === $module->reg_autoActivate && $match) {
+            $this->loginUser($data['username']);
         }
     }
 
@@ -86,17 +81,9 @@ class RegistrationListener
      *
      * @Hook("activateAccount")
      */
-    public function onActivateAccount(MemberModel $member): void
+    public function onActivateAccount(MemberModel $member, ModuleRegistration $module): void
     {
-        global $objPage;
-
-        $pageModel = PageModel::findById($objPage->rootId);
-
-        if (null === $pageModel) {
-            return;
-        }
-
-        if ($pageModel->auto_login_activation) {
+        if ($module->reg_activateLogin) {
             $this->loginUser($member->username);
         }
     }

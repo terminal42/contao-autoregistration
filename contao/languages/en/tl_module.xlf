@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en">
+        <body>
+            <trans-unit id="tl_module.reg_autoActivate.0">
+                <source>Member account activation</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_autoActivate.1">
+                <source>Activate and login new members without email confirmation.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_autoActivate.disable">
+                <source>Do not activate</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_autoActivate.activate">
+                <source>Activate account</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_autoActivate.login">
+                <source>Activate and login instantly</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_activateLogin.0">
+                <source>Login on activation</source>
+            </trans-unit>
+            <trans-unit id="tl_module.reg_activateLogin.1">
+                <source>Automatically login new members when they confirm activation.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

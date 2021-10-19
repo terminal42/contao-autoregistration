@@ -15,4 +15,8 @@ composer require terminal42/contao-autoregistration
 
 ## Configuration
 
-All configuration takes place in the root page of each domain/language.
+All configuration takes place in the registration module.
+
+**WARNING:** In previous versions, the configuration was a
+root page setting. This has been changed in V3, you need
+to re-configure your registration module after an update!
