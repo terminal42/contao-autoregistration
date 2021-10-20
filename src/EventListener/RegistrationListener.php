@@ -57,7 +57,7 @@ class RegistrationListener
      */
     public function onCreateNewUser(int $userId, array &$data, ModuleRegistration $module): void
     {
-        if (!$module->reg_autoActivate) {
+        if ('activate' !== $module->reg_autoActivate && 'login' !== $module->reg_autoActivate) {
             return;
         }
 
