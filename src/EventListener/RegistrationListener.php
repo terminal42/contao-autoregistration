@@ -67,7 +67,7 @@ class RegistrationListener
             ->set('disable', ':disable')
             ->where('id=:id')
             ->setParameter('id', $userId)
-            ->setParameter(':disable', '')
+            ->setParameter('disable', '')
             ->execute()
         ;
 
