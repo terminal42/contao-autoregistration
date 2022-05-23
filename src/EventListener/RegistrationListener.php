@@ -123,6 +123,7 @@ class RegistrationListener
         );
 
         $request = $this->requestStack->getCurrentRequest();
+
         if (null === $request) {
             return;
         }
