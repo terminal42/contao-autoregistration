@@ -62,16 +62,9 @@ class RegistrationListener
         }
 
         $data['disable'] = '';
-        $match = $this->connection->createQueryBuilder()
-            ->update('tl_member')
-            ->set('disable', ':disable')
-            ->where('id=:id')
-            ->setParameter('id', $userId)
-            ->setParameter('disable', '')
-            ->execute()
-        ;
+        $affectedRows = $this->connection->update('tl_member', ['disable' => ''], ['id' => $userId]);
 
-        if ('login' === $module->reg_autoActivate && $match) {
+        if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
             $this->loginUser($data['username']);
         }
     }
