@@ -38,6 +38,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
+        "terminal42/notification_center": "^1 || ^2",
         "terminal42/contao-build-tools": "dev-main"
     },
     "conflict": {
