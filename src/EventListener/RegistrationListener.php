@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -94,8 +94,8 @@ class RegistrationListener
     private function loginUser(string $username): void
     {
         try {
-            $user = $this->userProvider->loadUserByUsername($username);
-        } catch (UsernameNotFoundException $exception) {
+            $user = $this->userProvider->loadUserByIdentifier($username);
+        } catch (UserNotFoundException $exception) {
             return;
         }
 
@@ -119,7 +119,7 @@ class RegistrationListener
         $this->logger->log(
             LogLevel::INFO,
             'User "'.$username.'" was logged in automatically',
-            ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)],
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS)],
         );
 
         $request = $this->requestStack->getCurrentRequest();
