@@ -16,4 +16,3 @@ indent_size = 4
 [*.html5]
 indent_style = space
 indent_size = 2
-insert_final_newline = false

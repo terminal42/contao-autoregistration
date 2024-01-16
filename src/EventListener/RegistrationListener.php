@@ -27,12 +27,19 @@ use Symfony\Component\Security\Http\SecurityEvents;
 class RegistrationListener
 {
     private UserProviderInterface $userProvider;
+
     private TokenStorageInterface $tokenStorage;
+
     private Connection $connection;
+
     private LoggerInterface $logger;
+
     private EventDispatcherInterface $eventDispatcher;
+
     private RequestStack $requestStack;
+
     private UserCheckerInterface $userChecker;
+
     private AuthenticationSuccessHandlerInterface $authenticationSuccessHandler;
 
     /**
@@ -112,7 +119,7 @@ class RegistrationListener
         $this->logger->log(
             LogLevel::INFO,
             'User "'.$username.'" was logged in automatically',
-            ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)]
+            ['contao' => new ContaoContext(__METHOD__, TL_ACCESS)],
         );
 
         $request = $this->requestStack->getCurrentRequest();

@@ -4,14 +4,14 @@
     "description": "Auto-login your users after their registration or account activation.",
     "keywords": ["login", "security", "registration", "contao"],
     "license": "MIT",
-    "authors":[
+    "authors": [
         {
-            "name":"terminal42 gmbh",
-            "homepage":"http://terminal42.ch"
+            "name": "terminal42 gmbh",
+            "homepage": "https://terminal42.ch"
         },
         {
-            "name":"Richard Henkenjohann",
-            "homepage":"https://github.com/richardhj"
+            "name": "Richard Henkenjohann",
+            "homepage": "https://github.com/richardhj"
         }
     ],
     "funding": [
@@ -35,7 +35,8 @@
         "doctrine/dbal": "^2.11 || ^3"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "terminal42/contao-build-tools": "dev-main"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
@@ -47,8 +48,5 @@
     },
     "extra": {
         "contao-manager-plugin": "Terminal42\\AutoRegistrationBundle\\ContaoManager\\Plugin"
-    },
-    "scripts": {
-        "cs-fixer": "@php tools/ecs/vendor/bin/ecs check src/ --fix --ansi"
     }
 }
