@@ -49,6 +49,15 @@
             "Terminal42\\AutoRegistrationBundle\\": "src/"
         }
     },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao-community-alliance/composer-plugin": true,
+            "contao/manager-plugin": true,
+            "terminal42/contao-build-tools": true,
+            "php-http/discovery": false
+        }
+    },
     "extra": {
         "contao-manager-plugin": "Terminal42\\AutoRegistrationBundle\\ContaoManager\\Plugin"
     }
