@@ -30,7 +30,7 @@
         "forum": "https://community.contao.org"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "contao/core-bundle": "^4.13 || ^5.0",
         "symfony/security-core": "^5.3 || ^6",
         "symfony/http-foundation": "^5.3 || ^6",

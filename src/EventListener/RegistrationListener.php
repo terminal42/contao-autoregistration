@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Terminal42\AutoRegistrationBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendUser;
 use Contao\MemberModel;
 use Contao\ModuleRegistration;
@@ -26,42 +26,22 @@ use Symfony\Component\Security\Http\SecurityEvents;
 
 class RegistrationListener
 {
-    private UserProviderInterface $userProvider;
-
-    private TokenStorageInterface $tokenStorage;
-
-    private Connection $connection;
-
-    private LoggerInterface $logger;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private RequestStack $requestStack;
-
-    private UserCheckerInterface $userChecker;
-
-    private AuthenticationSuccessHandlerInterface $authenticationSuccessHandler;
-
-    /**
-     * RegistrationListener constructor.
-     */
-    public function __construct(UserProviderInterface $userProvider, TokenStorageInterface $tokenStorage, Connection $connection, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack, UserCheckerInterface $userChecker, AuthenticationSuccessHandlerInterface $authenticationSuccessHandler)
-    {
-        $this->userProvider = $userProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->connection = $connection;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->requestStack = $requestStack;
-        $this->userChecker = $userChecker;
-        $this->authenticationSuccessHandler = $authenticationSuccessHandler;
+    public function __construct(
+        private readonly UserProviderInterface $userProvider,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RequestStack $requestStack,
+        private readonly UserCheckerInterface $userChecker,
+        private readonly AuthenticationSuccessHandlerInterface $authenticationSuccessHandler,
+    ) {
     }
 
     /**
      * Within the registration process, log in the user if needed.
-     *
-     * @Hook("createNewUser")
      */
+    #[AsHook('createNewUser')]
     public function onCreateNewUser(int $userId, array &$data, ModuleRegistration $module): void
     {
         if ('activate' !== $module->reg_autoActivate && 'login' !== $module->reg_autoActivate) {
@@ -78,9 +58,8 @@ class RegistrationListener
 
     /**
      * Within the activation process, log in the user if needed.
-     *
-     * @Hook("activateAccount")
      */
+    #[AsHook('activateAccount')]
     public function onActivateAccount(MemberModel $member, ModuleRegistration $module): void
     {
         if ($module->reg_activateLogin) {
@@ -95,7 +74,7 @@ class RegistrationListener
     {
         try {
             $user = $this->userProvider->loadUserByIdentifier($username);
-        } catch (UserNotFoundException $exception) {
+        } catch (UserNotFoundException) {
             return;
         }
 
@@ -106,11 +85,11 @@ class RegistrationListener
         try {
             $this->userChecker->checkPreAuth($user);
             $this->userChecker->checkPostAuth($user);
-        } catch (AccountStatusException $e) {
+        } catch (AccountStatusException) {
             return;
         }
 
-        $usernamePasswordToken = new UsernamePasswordToken($user, null, 'frontend', $user->getRoles());
+        $usernamePasswordToken = new UsernamePasswordToken($user, 'frontend', $user->getRoles());
         $this->tokenStorage->setToken($usernamePasswordToken);
 
         $event = new InteractiveLoginEvent($this->requestStack->getCurrentRequest(), $usernamePasswordToken);
