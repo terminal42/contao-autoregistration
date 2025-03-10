@@ -26,6 +26,9 @@ use Symfony\Component\Security\Http\SecurityEvents;
 
 class RegistrationListener
 {
+    /**
+     * @param UserProviderInterface<FrontendUser> $userProvider
+     */
     public function __construct(
         private readonly UserProviderInterface $userProvider,
         private readonly TokenStorageInterface $tokenStorage,
@@ -40,6 +43,8 @@ class RegistrationListener
 
     /**
      * Within the registration process, log in the user if needed.
+     *
+     * @param array<string, mixed> $data
      */
     #[AsHook('createNewUser')]
     public function onCreateNewUser(int $userId, array &$data, ModuleRegistration $module): void
