@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\AutoRegistrationBundle\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
@@ -38,8 +39,7 @@ class RegistrationListener
         private readonly RequestStack $requestStack,
         private readonly UserCheckerInterface $userChecker,
         private readonly AuthenticationSuccessHandlerInterface $authenticationSuccessHandler,
-    ) {
-    }
+    ) {}
 
     /**
      * Within the registration process, log in the user if needed.
@@ -53,10 +53,13 @@ class RegistrationListener
             return;
         }
 
-        $data['disable'] = '';
-        $affectedRows = $this->connection->update('tl_member', ['disable' => ''], ['id' => $userId]);
+        // ensure it works for both Contao 4.13 and 5.x
+        if (version_compare(ContaoCoreBundle::getVersion(), '5', '<')) {
+            $data['disable'] = '';
+            $this->connection->update('tl_member', ['disable' => ''], ['id' => $userId]);
+        }
 
-        if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
+        if ('login' === $module->reg_autoActivate) {
             $this->loginUser($data['username']);
         }
     }
@@ -102,7 +105,7 @@ class RegistrationListener
 
         $this->logger->log(
             LogLevel::INFO,
-            'User "'.$username.'" was logged in automatically',
+            'User "' . $username . '" was logged in automatically',
             ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS)],
         );
 
