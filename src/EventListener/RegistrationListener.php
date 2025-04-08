@@ -39,7 +39,8 @@ class RegistrationListener
         private readonly RequestStack $requestStack,
         private readonly UserCheckerInterface $userChecker,
         private readonly AuthenticationSuccessHandlerInterface $authenticationSuccessHandler,
-    ) {}
+    ) {
+	}
 
     /**
      * Within the registration process, log in the user if needed.
@@ -54,7 +55,7 @@ class RegistrationListener
         }
 
         $disableValue = version_compare(ContaoCoreBundle::getVersion(), '5', '<') ? '' : 0;
-
+		$data['disable'] = $disableValue;
         $affectedRows = $this->connection->update('tl_member', ['disable' => $disableValue], ['id' => $userId]);
 
         if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
@@ -103,7 +104,7 @@ class RegistrationListener
 
         $this->logger->log(
             LogLevel::INFO,
-            'User "' . $username . '" was logged in automatically',
+            'User "'.$username.'" was logged in automatically',
             ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS)],
         );
 
