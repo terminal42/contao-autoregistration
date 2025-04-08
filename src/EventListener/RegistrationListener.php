@@ -40,7 +40,7 @@ class RegistrationListener
         private readonly UserCheckerInterface $userChecker,
         private readonly AuthenticationSuccessHandlerInterface $authenticationSuccessHandler,
     ) {
-	}
+    }
 
     /**
      * Within the registration process, log in the user if needed.
