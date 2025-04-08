@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\AutoRegistrationBundle\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
@@ -53,8 +54,9 @@ class RegistrationListener
             return;
         }
 
-        $data['disable'] = '';
-        $affectedRows = $this->connection->update('tl_member', ['disable' => ''], ['id' => $userId]);
+        $disableValue = version_compare(ContaoCoreBundle::getVersion(), '5', '<') ? '' : 0;
+		$data['disable'] = $disableValue;
+        $affectedRows = $this->connection->update('tl_member', ['disable' => $disableValue], ['id' => $userId]);
 
         if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
             $this->loginUser($data['username']);
