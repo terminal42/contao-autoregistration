@@ -53,13 +53,11 @@ class RegistrationListener
             return;
         }
 
-        // ensure it works for both Contao 4.13 and 5.x
-        if (version_compare(ContaoCoreBundle::getVersion(), '5', '<')) {
-            $data['disable'] = '';
-            $this->connection->update('tl_member', ['disable' => ''], ['id' => $userId]);
-        }
+        $disableValue = version_compare(ContaoCoreBundle::getVersion(), '5', '<') ? '' : 0;
 
-        if ('login' === $module->reg_autoActivate) {
+        $affectedRows = $this->connection->update('tl_member', ['disable' => $disableValue], ['id' => $userId]);
+
+        if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
             $this->loginUser($data['username']);
         }
     }
