@@ -67,6 +67,6 @@ class RegistrationListener
             return;
         }
 
-        $this->security->login($user);
+        $this->security->login($user, 'contao.security.login_authenticator.contao_frontend');
     }
 }
