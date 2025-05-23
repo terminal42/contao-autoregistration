@@ -6,13 +6,6 @@ services:
 
     Terminal42\AutoRegistrationBundle\EventListener\RegistrationListener:
         arguments:
+            - '@security.helper'
             - '@contao.security.frontend_user_provider'
-            - '@security.token_storage'
             - '@database_connection'
-            - '@logger'
-            - '@event_dispatcher'
-            - '@request_stack'
-            - '@contao.security.user_checker'
-            - '@contao.security.authentication_success_handler'
-        tags:
-            - { name: 'monolog.logger', channel: 'terminal42_autoregistration' }
