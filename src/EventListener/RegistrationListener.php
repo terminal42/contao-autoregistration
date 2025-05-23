@@ -37,8 +37,7 @@ class RegistrationListener
             return;
         }
 
-        $data['disable'] = false;
-        $affectedRows = $this->connection->update('tl_member', ['disable' => false], ['id' => $userId]);
+        $affectedRows = $this->connection->update('tl_member', ['disable' => 0], ['id' => $userId]);
 
         if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
             $this->loginUser($data['username']);
