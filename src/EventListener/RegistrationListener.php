@@ -23,6 +23,7 @@ class RegistrationListener
         private readonly Security $security,
         private readonly UserProviderInterface $userProvider,
         private readonly Connection $connection,
+        private readonly string $authenticatorName = 'contao.security.login_authenticator.contao_frontend',
     ) {
     }
 
@@ -68,6 +69,6 @@ class RegistrationListener
             return;
         }
 
-        $this->security->login($user);
+        $this->security->login($user, $this->authenticatorName);
     }
 }
