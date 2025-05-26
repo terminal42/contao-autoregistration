@@ -9,6 +9,7 @@ use Contao\FrontendUser;
 use Contao\MemberModel;
 use Contao\ModuleRegistration;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -38,7 +39,7 @@ class RegistrationListener
         }
 
         $data['disable'] = false;
-        $affectedRows = $this->connection->update('tl_member', ['disable' => false], ['id' => $userId]);
+        $affectedRows = $this->connection->update('tl_member', ['disable' => false], ['id' => $userId], ['disable' => Types::BOOLEAN]);
 
         if ('login' === $module->reg_autoActivate && $affectedRows > 0) {
             $this->loginUser($data['username']);
