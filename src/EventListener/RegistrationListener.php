@@ -73,7 +73,7 @@ class RegistrationListener
 
         // The target path does not matter, because we do not use the login response but let the registration module
         // generate the response.
-        $this->requestStack->getCurrentRequest()->request->set('_target_path', '/');
+        $this->requestStack->getCurrentRequest()->request->set('_target_path', base64_encode('/'));
 
         $this->security->login($user, $this->authenticatorName);
     }
