@@ -9,3 +9,4 @@ services:
             - '@security.helper'
             - '@contao.security.frontend_user_provider'
             - '@database_connection'
+            - '@request_stack'

@@ -11,6 +11,7 @@ use Contao\ModuleRegistration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -23,6 +24,7 @@ class RegistrationListener
         private readonly Security $security,
         private readonly UserProviderInterface $userProvider,
         private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
         private readonly string $authenticatorName = 'contao.security.login_authenticator.contao_frontend',
     ) {
     }
@@ -68,6 +70,10 @@ class RegistrationListener
         } catch (UserNotFoundException) {
             return;
         }
+
+        // The target path does not matter, because we do not use the login response but let the registration module
+        // generate the response.
+        $this->requestStack->getCurrentRequest()->request->set('_target_path', '/');
 
         $this->security->login($user, $this->authenticatorName);
     }
